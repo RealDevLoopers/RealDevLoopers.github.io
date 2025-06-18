@@ -540,6 +540,53 @@
       font-size: 0.9rem;
     }
 
+    /* Nuova sezione Termini e Condizioni */
+    .terms {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .terms h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .terms-content {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .terms-section {
+      margin-bottom: 2rem;
+    }
+
+    .terms-section h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .terms-section p {
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+
+    .terms-list {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .terms-list li {
+      margin-bottom: 0.5rem;
+    }
+
     footer {
       background: rgba(10, 10, 10, 0.8);
       padding: 3rem 2rem 1rem;
@@ -745,24 +792,24 @@
         <h2>Chi siamo</h2>
         <p>Siamo un team di developer appassionati con anni di esperienza nello sviluppo di plugin Minecraft. Combiniamo creatività e competenza tecnica per offrire soluzioni uniche e su misura.</p>
         <div class="skills">
-<div class="skills">
-  <div class="skill-item">
-    <i class="fab fa-java"></i>
-    <span>Java</span>
-  </div>
-  <div class="skill-item">
-    <i class="fas fa-server"></i>
-    <span>VPS</span>
-  </div>
-  <div class="skill-item">
-    <i class="fab fa-discord"></i>
-    <span>Discord</span>
-  </div>
-  <div class="skill-item">
-    <i class="fas fa-cubes"></i>
-    <span>Build</span>
-  </div>
-</div>
+          <div class="skill-item">
+            <i class="fab fa-java"></i>
+            <span>Java</span>
+          </div>
+          <div class="skill-item">
+            <i class="fas fa-server"></i>
+            <span>VPS</span>
+          </div>
+          <div class="skill-item">
+            <i class="fab fa-discord"></i>
+            <span>Discord</span>
+          </div>
+          <div class="skill-item">
+            <i class="fas fa-cubes"></i>
+            <span>Build</span>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="projects" id="projects">
@@ -816,17 +863,19 @@
     </section>
 
     <section class="stats">
-      <div class="stat-item">
-        <div class="stat-number" data-count="23">0</div>
-        <div class="stat-label">Plugin sviluppati</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" data-count="21">0</div>
-        <div class="stat-label">Clienti soddisfatti</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-number" data-count="2">0</div>
-        <div class="stat-label">Anni di esperienza</div>
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-number" data-count="23">0</div>
+          <div class="stat-label">Plugin sviluppati</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="21">0</div>
+          <div class="stat-label">Clienti soddisfatti</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-count="2">0</div>
+          <div class="stat-label">Anni di esperienza</div>
+        </div>
       </div>
     </section>
 
@@ -891,6 +940,44 @@
         </div>
       </div>
     </section>
+
+    <!-- Nuova sezione Termini e Condizioni -->
+    <section class="terms" id="terms">
+      <h2>Termini e Condizioni</h2>
+      <div class="terms-content">
+        <div class="terms-section">
+          <h3>Politica di Rimborso</h3>
+          <p>Si prega di leggere attentamente le seguenti condizioni riguardanti i rimborsi:</p>
+          <ul class="terms-list">
+            <li>Non offriamo rimborsi per servizi già completati o consegnati</li>
+            <li>In caso di cancellazione di un progetto prima del completamento, verrà trattenuta una percentuale proporzionale al lavoro già svolto</li>
+            <li>Eventuali bug o problemi tecnici verranno risolti gratuitamente entro 30 giorni dalla consegna</li>
+            <li>Non siamo responsabili per problemi derivanti da modifiche esterne al codice da parte del cliente</li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h3>Metodi di Pagamento</h3>
+          <p>Accettiamo i seguenti metodi di pagamento:</p>
+          <ul class="terms-list">
+            <li>PayPal</li>
+            <li>Bonifico bancario istantaneo</li>
+          </ul>
+          <p>I pagamenti vengono generalmente suddivisi in:</p>
+          <ul class="terms-list">
+            <li>50% all'inizio del progetto</li>
+            <li>50% alla consegna</li>
+          </ul>
+        </div>
+
+        <div class="terms-section">
+          <h3>Condizioni Generali</h3>
+          <p>Tutti i nostri lavori sono protetti da copyright e non possono essere ridistribuiti senza autorizzazione.</p>
+          <p>Ci riserviamo il diritto di rifiutare qualsiasi progetto che violi i termini di servizio di Minecraft o che promuova contenuti inappropriati.</p>
+          <p>I tempi di consegna sono stimati e possono variare in base alla complessità del progetto e alla disponibilità del team.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -903,6 +990,7 @@
         <a href="#about">Chi siamo</a>
         <a href="#projects">Progetti</a>
         <a href="#contact">Contatti</a>
+        <a href="#terms">Termini</a>
       </div>
       <div class="footer-social">
         <a href="#"><i class="fab fa-github"></i></a>
