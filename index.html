@@ -238,72 +238,6 @@
       100% { transform: translateY(0px); }
     }
 
-    /* Sezione Build */
-    .build {
-      padding: 6rem 2rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-
-    .build h2 {
-      font-size: 2.5rem;
-      margin-bottom: 3rem;
-      text-align: center;
-      color: var(--accent);
-    }
-
-    .build-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 2rem;
-    }
-
-    .build-item {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      height: 250px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease;
-    }
-
-    .build-item:hover {
-      transform: translateY(-10px);
-    }
-
-    .build-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .build-item:hover .build-img {
-      transform: scale(1.1);
-    }
-
-    .build-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-      padding: 1.5rem;
-      color: white;
-    }
-
-    .build-title {
-      font-size: 1.2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .build-desc {
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
-
     .about {
       display: flex;
       align-items: center;
@@ -625,6 +559,72 @@
       font-size: 0.9rem;
     }
 
+    /* Sezione Build */
+    .build {
+      padding: 6rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .build h2 {
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .build-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .build-item {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 250px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .build-item:hover {
+      transform: translateY(-10px);
+    }
+
+    .build-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .build-item:hover .build-img {
+      transform: scale(1.1);
+    }
+
+    .build-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      padding: 1.5rem;
+      color: white;
+    }
+
+    .build-title {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .build-desc {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
     .terms {
       padding: 6rem 2rem;
       max-width: 1200px;
@@ -863,45 +863,16 @@
       <span>RealDevLoopers Minecraft</span>
     </div>
     <nav class="nav-links">
-      <a href="#build">Build</a>
       <a href="#about">Chi siamo</a>
       <a href="#projects">Progetti</a>
       <a href="#contact">Contatti</a>
+      <a href="#build">Build</a>
       <a href="#terms">Termini</a>
     </nav>
     <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
   </header>
 
   <main>
-    <!-- Sezione Build -->
-    <section class="build" id="build">
-      <h2>Le nostre Build</h2>
-      <div class="build-gallery">
-        <div class="build-item">
-          <img src="https://i.imgur.com/placeholder1.jpg" alt="Build 1" class="build-img">
-          <div class="build-overlay">
-            <h3 class="build-title">Castello Medievale</h3>
-            <p class="build-desc">Costruzione dettagliata con interni completi</p>
-          </div>
-        </div>
-        <div class="build-item">
-          <img src="https://i.imgur.com/placeholder2.jpg" alt="Build 2" class="build-img">
-          <div class="build-overlay">
-            <h3 class="build-title">Città Futuristica</h3>
-            <p class="build-desc">Skyline con grattacieli e trasporti avanzati</p>
-          </div>
-        </div>
-        <div class="build-item">
-          <img src="https://i.imgur.com/placeholder3.jpg" alt="Build 3" class="build-img">
-          <div class="build-overlay">
-            <h3 class="build-title">Villaggio Fantasy</h3>
-            <p class="build-desc">Ambientazione magica con dettagli unici</p>
-          </div>
-        </div>
-        <!-- Aggiungi altre build qui -->
-      </div>
-    </section>
-
     <section class="hero">
       <div class="hero-content">
         <h1>Sviluppatori di <span class="highlight">Plugin Minecraft</span></h1>
@@ -1073,6 +1044,35 @@
       </div>
     </section>
 
+    <!-- Sezione Build spostata qui in fondo -->
+    <section class="build" id="build">
+      <h2>Le nostre Build</h2>
+      <div class="build-gallery">
+        <div class="build-item">
+          <img src="https://i.imgur.com/placeholder1.jpg" alt="Build 1" class="build-img">
+          <div class="build-overlay">
+            <h3 class="build-title">Castello Medievale</h3>
+            <p class="build-desc">Costruzione dettagliata con interni completi</p>
+          </div>
+        </div>
+        <div class="build-item">
+          <img src="https://i.imgur.com/placeholder2.jpg" alt="Build 2" class="build-img">
+          <div class="build-overlay">
+            <h3 class="build-title">Città Futuristica</h3>
+            <p class="build-desc">Skyline con grattacieli e trasporti avanzati</p>
+          </div>
+        </div>
+        <div class="build-item">
+          <img src="https://i.imgur.com/placeholder3.jpg" alt="Build 3" class="build-img">
+          <div class="build-overlay">
+            <h3 class="build-title">Villaggio Fantasy</h3>
+            <p class="build-desc">Ambientazione magica con dettagli unici</p>
+          </div>
+        </div>
+        <!-- Aggiungi altre build qui -->
+      </div>
+    </section>
+
     <section class="terms" id="terms">
       <h2>Termini e Condizioni</h2>
       <div class="terms-content">
@@ -1118,10 +1118,10 @@
         <span>DevTeam Minecraft</span>
       </div>
       <div class="footer-links">
-        <a href="#build">Build</a>
         <a href="#about">Chi siamo</a>
         <a href="#projects">Progetti</a>
         <a href="#contact">Contatti</a>
+        <a href="#build">Build</a>
         <a href="#terms">Termini</a>
       </div>
       <div class="footer-social">
