@@ -1,561 +1,1088 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Plugin Developers</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-color: #000000;
-            --secondary-color: #ffffff;
-            --accent-color: #4CAF50;
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --card-bg: #f5f5f5;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevTeam Minecraft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Minecraft&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --bg: #121212;
+      --text: #f5f5f5;
+      --card: rgba(255, 255, 255, 0.05);
+      --accent: #00bcd4;
+      --accent-dark: #008ba3;
+      --border: #333333;
+      --primary: #00bcd4;
+      --secondary: #6c757d;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+      --info: #17a2b8;
+      --light: #f8f9fa;
+      --dark: #343a40;
+    }
 
-        .dark-mode {
-            --primary-color: #ffffff;
-            --secondary-color: #000000;
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
-            --card-bg: #1e1e1e;
-        }
+    [data-theme="light"] {
+      --bg: #ffffff;
+      --text: #1a1a1a;
+      --card: #f9f9f9;
+      --border: #e0e0e0;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: all 0.3s ease;
+      position: relative;
+      min-height: 100vh;
+      z-index: 1;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
 
-        header {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            padding: 1.5rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+    .bg-overlay {
+      background: url('https://i.imgur.com/rJwiE4B.jpeg') no-repeat center center/cover;
+      filter: brightness(0.2) blur(2px);
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
 
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      position: sticky;
+      top: 0;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(10px);
+      z-index: 100;
+      border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    [data-theme="light"] header {
+      background: rgba(255, 255, 255, 0.9);
+    }
 
-        .logo i {
-            margin-right: 10px;
-            color: var(--accent-color);
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      font-family: 'Minecraft', sans-serif;
+    }
 
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
+    .logo-img {
+      height: 40px;
+      width: auto;
+    }
 
-        .nav-links li {
-            margin-left: 2rem;
-        }
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+      padding: 0.5rem;
+      border-radius: 50%;
+    }
 
-        .nav-links a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    .theme-toggle:hover {
+      transform: rotate(15deg);
+      background: rgba(0, 188, 212, 0.1);
+    }
 
-        .nav-links a:hover {
-            color: var(--accent-color);
-        }
+    .hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
 
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--secondary-color);
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin-left: 2rem;
-        }
+    .hero-content {
+      flex: 1;
+      max-width: 600px;
+    }
 
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            padding-top: 80px;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1607513746994-51f730a44832?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
-            color: white;
-        }
+    .hero-image {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
 
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      line-height: 1.2;
+    }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
+    .highlight {
+      color: var(--accent);
+      position: relative;
+      display: inline-block;
+    }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-        }
+    .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 5px;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: rgba(0, 188, 212, 0.3);
+      z-index: -1;
+    }
 
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: white;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+    .hero-text {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
 
-        section {
-            padding: 5rem 0;
-        }
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-            font-size: 2.5rem;
-            color: var(--primary-color);
-        }
+    .btn-primary {
+      background-color: var(--accent);
+      color: white;
+    }
 
-        .about-content {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-        }
+    .btn-primary:hover {
+      background-color: var(--accent-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 188, 212, 0.3);
+    }
 
-        .about-text {
-            flex: 1;
-        }
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
 
-        .about-image {
-            flex: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
+    .btn-secondary:hover {
+      background-color: rgba(0, 188, 212, 0.1);
+      transform: translateY(-3px);
+    }
 
-        .about-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
 
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
 
-        .project-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
+    .about {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
 
-        .project-card:hover {
-            transform: translateY(-10px);
-        }
+    .about-image {
+      flex: 1;
+    }
 
-        .project-image {
-            height: 200px;
-            overflow: hidden;
-        }
+    .about-content {
+      flex: 1;
+    }
 
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
+    .about-img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
 
-        .project-card:hover .project-image img {
-            transform: scale(1.1);
-        }
+    .about-img:hover {
+      transform: scale(1.02);
+    }
 
-        .project-info {
-            padding: 1.5rem;
-        }
+    .about h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      color: var(--accent);
+    }
 
-        .project-info h3 {
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
+    .about p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
 
-        .project-info p {
-            margin-bottom: 1rem;
-            color: var(--text-color);
-        }
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
 
-        .project-links a {
-            display: inline-block;
-            margin-right: 1rem;
-            color: var(--accent-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
+    .skill-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--card);
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
 
-        .contact-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: var(--card-bg);
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+    .skill-item:hover {
+      background: rgba(0, 188, 212, 0.1);
+      border-color: var(--accent);
+      transform: translateY(-3px);
+    }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+    .skill-item i {
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--primary-color);
-        }
+    .projects {
+      padding: 6rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
 
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
+    .projects h2 {
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      text-align: center;
+      color: var(--accent);
+    }
 
-        .form-group textarea {
-            min-height: 150px;
-            resize: vertical;
-        }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
 
-        .direct-contacts {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid #ddd;
-        }
+    .project-card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
 
-        .direct-contacts h3 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
+    .project-card.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-        .contact-methods {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-        }
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
 
-        .contact-method {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background-color: var(--card-bg);
-            padding: 1.5rem;
-            border-radius: 10px;
-            min-width: 250px;
-        }
+    .project-image {
+      height: 200px;
+      overflow: hidden;
+    }
 
-        .contact-logo {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-        }
+    .project-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
 
-        .contact-info h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
+    .project-card:hover .project-image img {
+      transform: scale(1.1);
+    }
 
-        .contact-info p {
-            margin: 0.3rem 0;
-            color: var(--text-color);
-        }
+    .project-content {
+      padding: 1.5rem;
+    }
 
-        footer {
-            background-color: var(--primary-color);
-            color: var(--secondary-color);
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
+    .project-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
 
-        .social-links {
-            display: flex;
-            justify-content: center;
-            margin: 1rem 0;
-        }
+    .project-content p {
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
 
-        .social-links a {
-            color: var(--secondary-color);
-            font-size: 1.5rem;
-            margin: 0 1rem;
-            transition: color 0.3s;
-        }
+    .project-features {
+      list-style: none;
+      margin-top: 1.5rem;
+    }
 
-        .social-links a:hover {
-            color: var(--accent-color);
-        }
+    .project-features li {
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
+    .project-features i {
+      color: var(--accent);
+    }
 
-            .hero h1 {
-                font-size: 2rem;
-            }
+    .stats {
+      padding: 4rem 2rem;
+      background: rgba(0, 188, 212, 0.1);
+      margin: 4rem 0;
+      position: relative;
+      z-index: 2;
+    }
 
-            .about-content {
-                flex-direction: column;
-            }
+    .stats::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://i.imgur.com/BzCl5SY.jpeg') center/cover;
+      opacity: 0.05;
+      z-index: -1;
+    }
 
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
+    .stats-container {
+      display: flex;
+      justify-content: space-around;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-            .contact-methods {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .contact-method {
-                width: 100%;
-            }
-        }
-    </style>
+    .stat-item {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1.2rem;
+      opacity: 0.8;
+    }
+
+    .contact {
+      padding: 6rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: var(--accent);
+    }
+
+    .contact-subtitle {
+      text-align: center;
+      margin-bottom: 3rem;
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .contact-container {
+      display: flex;
+      gap: 3rem;
+      margin-top: 2rem;
+    }
+
+    .contact-form {
+      flex: 1;
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+    }
+
+    .contact-methods {
+      flex: 1;
+    }
+
+    .contact-info {
+      background: var(--card);
+      padding: 2rem;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      height: 100%;
+    }
+
+    .contact-info h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent);
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .contact-item:hover {
+      background: rgba(0, 188, 212, 0.1);
+      transform: translateX(5px);
+    }
+
+    .contact-item i {
+      font-size: 1.5rem;
+      color: var(--accent);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 188, 212, 0.1);
+      border-radius: 50%;
+    }
+
+    .contact-platform {
+      font-weight: bold;
+      margin-bottom: 0.2rem;
+    }
+
+    .contact-detail {
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      background: rgba(10, 10, 10, 0.8);
+      padding: 3rem 2rem 1rem;
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid rgba(0, 188, 212, 0.2);
+    }
+
+    [data-theme="light"] footer {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .footer-logo img {
+      height: 30px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .footer-links a {
+      color: var(--text);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-social a {
+      color: var(--text);
+      font-size: 1.2rem;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .footer-social a:hover {
+      background: var(--accent);
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .footer-copyright {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      opacity: 0.7;
+      font-size: 0.9rem;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .form-message {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .form-message.success {
+      background-color: rgba(40, 167, 69, 0.2);
+      color: #28a745;
+      border: 1px solid #28a745;
+    }
+
+    .form-message.error {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #dc3545;
+      border: 1px solid #dc3545;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .animate {
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @media (max-width: 1024px) {
+      .hero, .about, .contact-container {
+        flex-direction: column;
+      }
+      
+      .hero-content, .about-content, .contact-form, .contact-methods {
+        max-width: 100%;
+      }
+      
+      .hero-image {
+        margin-top: 3rem;
+      }
+      
+      .about-image {
+        order: -1;
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      
+      header {
+        padding: 1rem;
+      }
+      
+      .logo span {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    <i class="fas fa-cube"></i>
-                    <span>MinecraftDevs</span>
-                </div>
-                <ul class="nav-links">
-                    <li><a href="#about">Chi Siamo</a></li>
-                    <li><a href="#projects">Progetti</a></li>
-                    <li><a href="#contact">Contatti</a></li>
-                </ul>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </nav>
-        </div>
-    </header>
+<body data-theme="dark">
+  <div class="bg-overlay"></div>
+  <div class="particles" id="particles-js"></div>
 
+  <header>
+    <div class="logo">
+      <img src="https://i.imgur.com/W5bZrhL.png" alt="DevTeam Logo" class="logo-img">
+      <span>DevTeam Minecraft</span>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+  </header>
+
+  <main>
     <section class="hero">
-        <div class="hero-content">
-            <h1>Plugin Minecraft di Qualità</h1>
-            <p>Il tuo server Minecraft merita il meglio. Sviluppiamo plugin personalizzati e ottimizzati per portare la tua esperienza di gioco al livello successivo.</p>
-            <a href="#contact" class="btn">Contattaci</a>
+      <div class="hero-content">
+        <h1>Sviluppatori di <span class="highlight">Plugin Minecraft</span></h1>
+        <p class="hero-text">Creiamo soluzioni personalizzate per portare il tuo server al livello successivo</p>
+        <div class="hero-buttons">
+          <a href="#projects" class="btn btn-primary">I nostri progetti</a>
+          <a href="#contact" class="btn btn-secondary">Contattaci</a>
         </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://i.imgur.com/fn5mxSZ.png" alt="Minecraft Plugin Development" class="floating">
+      </div>
     </section>
 
-    <section id="about" class="about">
-        <div class="container">
-            <h2 class="section-title">Chi Siamo</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Il nostro team è composto da sviluppatori esperti e appassionati di Minecraft con anni di esperienza nello sviluppo di plugin. Ci dedichiamo a creare soluzioni innovative e performanti per server di ogni dimensione.</p>
-                    <p>Specializzati in Java e nell'API Spigot/Bukkit, sviluppiamo plugin personalizzati che soddisfano le esigenze specifiche di ogni server, dalle funzionalità base ai sistemi complessi di economia, ranking e game mechanics.</p>
-                    <p>Ogni plugin che creiamo è ottimizzato per le prestazioni, sicuro e facile da usare, con un'attenzione particolare all'esperienza dell'utente finale.</p>
-                </div>
-                <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1627855437693-dcc7b0c4ba7b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Team di sviluppo Minecraft">
-                </div>
-            </div>
-        </div>
+    <section class="about" id="about">
+      <div class="about-image">
+        <img src="https://i.imgur.com/f9Fzsk7.png" alt="Team di sviluppo" class="about-img">
+      </div>
+      <div class="about-content">
+        <h2>Chi siamo</h2>
+        <p>Siamo un team di developer appassionati con anni di esperienza nello sviluppo di plugin Minecraft. Combiniamo creatività e competenza tecnica per offrire soluzioni uniche e su misura.</p>
+        <div class="skills">
+<div class="skills">
+  <div class="skill-item">
+    <i class="fab fa-java"></i>
+    <span>Java</span>
+  </div>
+  <div class="skill-item">
+    <i class="fas fa-server"></i>
+    <span>VPS</span>
+  </div>
+  <div class="skill-item">
+    <i class="fab fa-discord"></i>
+    <span>Discord</span>
+  </div>
+  <div class="skill-item">
+    <i class="fas fa-cubes"></i>
+    <span>Build</span>
+  </div>
+</div>
     </section>
 
-    <section id="projects" class="projects">
-        <div class="container">
-            <h2 class="section-title">I Nostri Progetti</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1587573089734-599851b0c8b6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Economy Plugin">
-                    </div>
-                    <div class="project-info">
-                        <h3>Advanced Economy</h3>
-                        <p>Un sistema economico completo con mercato, banche, prestiti e transazioni sicure. Supporta multi-valuta e integrazione con altri plugin.</p>
-                        <div class="project-links">
-                            <a href="#"><i class="fas fa-external-link-alt"></i> Demo</a>
-                            <a href="#"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1560253023-3ec5d502959f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Minigame Plugin">
-                    </div>
-                    <div class="project-info">
-                        <h3>Minigame System</h3>
-                        <p>Framework per creare minigame personalizzati con sistema di lobby, matchmaking, statistiche e premi. Include 5 minigame predefiniti.</p>
-                        <div class="project-links">
-                            <a href="#"><i class="fas fa-external-link-alt"></i> Demo</a>
-                            <a href="#"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1633613286848-e6f43bbafb8d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Security Plugin">
-                    </div>
-                    <div class="project-info">
-                        <h3>Security Suite</h3>
-                        <p>Protezione avanzata per il tuo server con anti-cheat, anti-xray, protezione contro exploit e sistema di report dei giocatori.</p>
-                        <div class="project-links">
-                            <a href="#"><i class="fas fa-external-link-alt"></i> Demo</a>
-                            <a href="#"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <section class="projects" id="projects">
+      <h2>I nostri progetti</h2>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-image">
+            <img src="https://i.imgur.com/q1lj2qC.gif" alt="Plugin Banca">
+          </div>
+          <div class="project-content">
+            <h3>Plugin Banca</h3>
+            <p>Sistema bancario completo con GUI intuitiva, carte di credito, bonifici e storico transazioni.</p>
+            <ul class="project-features">
+              <li><i class="fas fa-check-circle"></i> Limiti Giornalieri Custom</li>
+              <li><i class="fas fa-check-circle"></i> Tanti tipi di carte di credito</li>
+              <li><i class="fas fa-check-circle"></i> Full Custommizzabile tramite Config</li>
+            </ul>
+          </div>
         </div>
+
+        <div class="project-card">
+          <div class="project-image">
+            <img src="https://i.imgur.com/2QZQZQy.png" alt="Sistema Droga">
+          </div>
+          <div class="project-content">
+            <h3>Sistema Droga</h3>
+            <p>Sistema completo per la creazione e gestione di gang con territori, guerre e ranking.</p>
+            <ul class="project-features">
+              <li><i class="fas fa-check-circle"></i> Alliances e rivalità</li>
+              <li><i class="fas fa-check-circle"></i> Sistema di livelli</li>
+              <li><i class="fas fa-check-circle"></i> GUI personalizzabile</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-card">
+          <div class="project-image">
+            <img src="https://i.imgur.com/3QZQZQy.png" alt="Lavori e Aziende">
+          </div>
+          <div class="project-content">
+            <h3>Lavori e Aziende</h3>
+            <p>Economia avanzata con lavori dinamici, aziende player-driven e sistema di produzione.</p>
+            <ul class="project-features">
+              <li><i class="fas fa-check-circle"></i> Stipendi variabili</li>
+              <li><i class="fas fa-check-circle"></i> Promozioni/demotioni</li>
+              <li><i class="fas fa-check-circle"></i> Sistema di skill</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Contattaci</h2>
-            <div class="contact-form">
-                <form>
-                    <div class="form-group">
-                        <label for="name">Nome</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="subject">Oggetto</label>
-                        <input type="text" id="subject" name="subject" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Messaggio</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn">Invia Messaggio</button>
-                </form>
-                
-                <div class="direct-contacts">
-                    <h3>Oppure contattaci direttamente:</h3>
-                    <div class="contact-methods">
-                        <div class="contact-method">
-                            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord Logo" class="contact-logo">
-                            <div class="contact-info">
-                                <h4>Discord</h4>
-                                <p>@RealFrafti</p>
-                                <p>@skeletonita</p>
-                            </div>
-                        </div>
-                        <div class="contact-method">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo" class="contact-logo">
-                            <div class="contact-info">
-                                <h4>Telegram</h4>
-                                <p>@RealFrafti</p>
-                                <p>@skeleYT11</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <section class="stats">
+      <div class="stat-item">
+        <div class="stat-number" data-count="23">0</div>
+        <div class="stat-label">Plugin sviluppati</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-count="20">0</div>
+        <div class="stat-label">Clienti soddisfatti</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-count="2">0</div>
+        <div class="stat-label">Anni di esperienza</div>
+      </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-cube"></i>
-                <span>MinecraftDevs</span>
+    <section class="contact" id="contact">
+      <h2>Contattaci</h2>
+      <p class="contact-subtitle">Pronto a portare il tuo server al livello successivo?</p>
+      
+      <div class="contact-container">
+        <div class="contact-form">
+          <form id="telegramForm">
+            <div class="form-group">
+              <input type="text" id="name" name="name" placeholder="Il tuo nome" required>
             </div>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-discord"></i></a>
-                <a href="#"><i class="fab fa-github"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
+            <div class="form-group">
+              <input type="email" id="email" name="email" placeholder="La tua email" required>
             </div>
-            <p>&copy; 2023 Minecraft Plugin Developers. Tutti i diritti riservati.</p>
+            <div class="form-group">
+              <input type="text" id="discord" name="discord" placeholder="Il tuo Discord (opzionale)">
+            </div>
+            <div class="form-group">
+              <textarea id="message" name="message" placeholder="Descrivici il tuo progetto" rows="5" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <span id="submitText">Invia richiesta</span>
+              <div id="loadingSpinner" class="spinner" style="display: none;"></div>
+            </button>
+            <div id="formMessage" class="form-message"></div>
+          </form>
         </div>
-    </footer>
+        <div class="contact-methods">
+          <div class="contact-info">
+            <h3>I nostri contatti</h3>
+            <a href="https://discord.com/users/RealFrafti" class="contact-item" target="_blank">
+              <i class="fab fa-discord"></i>
+              <div>
+                <p class="contact-platform">Discord</p>
+                <p class="contact-detail">@RealFrafti</p>
+              </div>
+            </a>
+            <a href="https://discord.com/users/skeletonita" class="contact-item" target="_blank">
+              <i class="fab fa-discord"></i>
+              <div>
+                <p class="contact-platform">Discord</p>
+                <p class="contact-detail">@skeletonita</p>
+              </div>
+            </a>
+            <a href="https://t.me/RealFrafti" class="contact-item" target="_blank">
+              <i class="fab fa-telegram"></i>
+              <div>
+                <p class="contact-platform">Telegram</p>
+                <p class="contact-detail">@RealFrafti</p>
+              </div>
+            </a>
+            <a href="https://t.me/skeleYT11" class="contact-item" target="_blank">
+              <i class="fab fa-telegram"></i>
+              <div>
+                <p class="contact-platform">Telegram</p>
+                <p class="contact-detail">@skeleYT11</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-    <script>
-        const themeToggle = document.getElementById('themeToggle');
-        const body = document.body;
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <img src="https://i.imgur.com/W5bZrhL.png" alt="DevTeam Logo">
+        <span>DevTeam Minecraft</span>
+      </div>
+      <div class="footer-links">
+        <a href="#about">Chi siamo</a>
+        <a href="#projects">Progetti</a>
+        <a href="#contact">Contatti</a>
+      </div>
+      <div class="footer-social">
+        <a href="#"><i class="fab fa-github"></i></a>
+        <a href="#"><i class="fab fa-spigot"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <p>&copy; 2025 DevTeam Minecraft. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
 
-        // Controlla lo stato del tema al caricamento della pagina
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Configurazione del bot Telegram con i tuoi dati
+    const BOT_TOKEN = '7923740336:AAGRUsWYLs19KmWjeP6HYJFdaiKfLxApB9U';
+    const CHAT_IDS = ['5514666752', '5401839618']; // Array con i tuoi chat ID
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const current = root.getAttribute('data-theme');
+      if (current === 'dark') {
+        root.setAttribute('data-theme', 'light');
+        document.querySelector('.theme-toggle').textContent = '🌙';
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        document.querySelector('.theme-toggle').textContent = '☀️';
+      }
+    }
+
+    // Funzione per inviare a tutti i chat ID
+    async function sendToAllChats(messageData) {
+      const text = `📌 *Nuova richiesta dal sito DevTeam Minecraft!*\n\n` +
+                   `👤 *Nome:* ${messageData.name}\n` +
+                   `📧 *Email:* ${messageData.email}\n` +
+                   `💬 *Discord:* ${messageData.discord || 'Non fornito'}\n\n` +
+                   `📝 *Messaggio:*\n${messageData.message}`;
+      
+      const requests = CHAT_IDS.map(chat_id => {
+        return fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            chat_id,
+            text: text,
+            parse_mode: 'Markdown'
+          })
+        });
+      });
+
+      return Promise.all(requests);
+    }
+
+    // Gestione del form
+    document.getElementById('telegramForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.querySelector('#telegramForm button[type="submit"]');
+      const submitText = document.getElementById('submitText');
+      const spinner = document.getElementById('loadingSpinner');
+      const formMessage = document.getElementById('formMessage');
+      
+      // Mostra lo spinner e disabilita il pulsante
+      submitText.textContent = 'Invio in corso...';
+      spinner.style.display = 'inline-block';
+      submitBtn.disabled = true;
+      formMessage.textContent = '';
+      formMessage.className = 'form-message';
+      
+      try {
+        const formData = {
+          name: sanitizeInput(document.getElementById('name').value),
+          email: sanitizeInput(document.getElementById('email').value),
+          discord: sanitizeInput(document.getElementById('discord').value),
+          message: sanitizeInput(document.getElementById('message').value)
+        };
+
+        // Validazione aggiuntiva
+        if (!formData.name || !formData.email || !formData.message) {
+          throw new Error('Per favore compila tutti i campi obbligatori');
         }
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                localStorage.setItem('darkMode', 'disabled');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        });
+        if (!validateEmail(formData.email)) {
+          throw new Error('Per favore inserisci un indirizzo email valido');
+        }
 
-        // Smooth scrolling per i link di navigazione
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // Invia a tutti i chat ID
+        const responses = await sendToAllChats(formData);
+        const results = await Promise.all(responses.map(r => r.json()));
+
+        // Verifica che almeno un invio sia andato a buon fine
+        const success = results.some(result => result.ok);
+        
+        if (success) {
+          formMessage.textContent = 'Richiesta inviata con successo! Ti risponderemo al più presto.';
+          formMessage.classList.add('success');
+          document.getElementById('telegramForm').reset();
+        } else {
+          throw new Error(results[0]?.description || 'Errore nell\'invio del messaggio');
+        }
+      } catch (error) {
+        console.error('Errore:', error);
+        formMessage.textContent = error.message || 'Si è verificato un errore. Per favore, contattaci direttamente su Discord o Telegram.';
+        formMessage.classList.add('error');
+      } finally {
+        submitText.textContent = 'Invia richiesta';
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Funzioni di utilità
+    function sanitizeInput(input) {
+      return input.trim().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    // Animazione numeri statistiche
+    function animateStats() {
+      const statNumbers = document.querySelectorAll('.stat-number');
+      statNumbers.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-count'));
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const timer = setInterval(() => {
+          current += step;
+          if (current >= target) {
+            clearInterval(timer);
+            current = target;
+          }
+          stat.textContent = Math.floor(current);
+        }, 16);
+      });
+    }
+
+    // Particelle e animazioni al scroll
+    document.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth > 768) {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 80, density: { enable: true, value_area: 800 } },
+            color: { value: "#00bcd4" },
+            shape: { type: "circle" },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00bcd4", opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
+          },
+          interactivity: {
+            detect_on: "canvas",
+            events: {
+              onhover: { enable: true, mode: "repulse" },
+              onclick: { enable: true, mode: "push" }
+            }
+          }
         });
-    </script>
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (entry.target.classList.contains('stats')) {
+              animateStats();
+            }
+            entry.target.classList.add('animate');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('section, .project-card').forEach(section => {
+        observer.observe(section);
+      });
+    });
+  </script>
 </body>
 </html>
