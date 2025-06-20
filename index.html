@@ -559,7 +559,6 @@
       font-size: 0.9rem;
     }
 
-    /* Sezione Build */
     .build {
       padding: 6rem 2rem;
       max-width: 1400px;
@@ -568,21 +567,20 @@
       z-index: 2;
     }
 
-.build h2 {
-  font-size: 2.5rem;
-  margin-bottom: 3rem;
-  text-align: center;
-  color: var(--accent);
-  padding-left: 50px; /* Sposta a sinistra */
-  /* Oppure con margin negativo: */
-  margin-left: -20px;
-}
+    .build h2 {
+      font-size: 2.5rem;
+      margin-bottom: 3rem;
+      text-align: center;
+      color: var(--accent);
+      padding-left: 50px;
+      margin-left: -20px;
+    }
 
     .build-gallery {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 2rem;
-	  margin-left: 50px; /* Aggiungi questa linea */
+      margin-left: 50px;
     }
 
     .build-item {
@@ -810,6 +808,71 @@
       animation: fadeIn 1s ease forwards;
     }
 
+    /* Stili per il player audio */
+    .audio-player {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 10px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--accent);
+    }
+    
+    .audio-control {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 1.2rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .audio-control:hover {
+      background: rgba(0, 188, 212, 0.2);
+    }
+    
+    .audio-volume {
+      width: 100px;
+      -webkit-appearance: none;
+      height: 5px;
+      background: var(--border);
+      border-radius: 5px;
+      outline: none;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    
+    .audio-volume:hover {
+      opacity: 1;
+    }
+    
+    .audio-volume::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    
+    [data-theme="light"] .audio-player {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
     @media (max-width: 1024px) {
       .hero, .about, .contact-container {
         flex-direction: column;
@@ -853,6 +916,16 @@
       
       .logo span {
         display: none;
+      }
+
+      .audio-player {
+        bottom: 10px;
+        right: 10px;
+        padding: 8px;
+      }
+      
+      .audio-volume {
+        width: 80px;
       }
     }
   </style>
@@ -957,7 +1030,7 @@
           </div>
           <div class="project-content">
             <h3>Vigili Del Fuoco</h3>
-	    <p>Plugin che aggiunge sistema di incendi randomici le region si possono creare con l'apposito tool</p>
+            <p>Plugin che aggiunge sistema di incendi randomici le region si possono creare con l'apposito tool</p>
             <ul class="project-features">
               <li><i class="fas fa-check-circle"></i> Incendi Random.</li>
               <li><i class="fas fa-check-circle"></i> Region Settabili</li>
@@ -1046,7 +1119,6 @@
       </div>
     </section>
 
-    <!-- Sezione Build spostata qui in fondo -->
     <section class="build" id="build">
       <h2>Le nostre Build</h2>
       <div class="build-gallery">
@@ -1071,7 +1143,6 @@
             <p class="build-desc">Buildata da Nicolfubbo</p>
           </div>
         </div>
-        <!-- Aggiungi altre build qui -->
       </div>
     </section>
 
@@ -1136,6 +1207,14 @@
       <p>&copy; 2025 DevTeam Minecraft. Tutti i diritti riservati.</p>
     </div>
   </footer>
+
+  <!-- Player Audio -->
+  <div class="audio-player">
+    <button class="audio-control" id="playPauseBtn">
+      <i class="fas fa-pause" id="playPauseIcon"></i>
+    </button>
+    <input type="range" min="0" max="1" step="0.01" value="0.25" class="audio-volume" id="volumeControl">
+  </div>
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
@@ -1268,8 +1347,55 @@
       });
     }
 
-    // Particelle e animazioni al scroll
+    // Gestione dell'audio
     document.addEventListener('DOMContentLoaded', () => {
+      // Crea l'elemento audio
+      const audio = new Audio('https://RealDevLoopers.github.io/RealDevLoopers.github.io/Untitled.mp3'); // Sostituisci con il tuo file MP3
+      audio.volume = 0.25; // Imposta il volume iniziale al 25%
+      audio.loop = true; // Riproduci in loop
+      
+      // Prova a riprodurre automaticamente (con gestione degli errori)
+      const playPromise = audio.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          console.log('Autoplay non consentito:', error);
+          // Mostra un pulsante per avviare manualmente
+          document.getElementById('playPauseBtn').style.display = 'flex';
+        });
+      }
+      
+      // Gestione del pulsante play/pause
+      const playPauseBtn = document.getElementById('playPauseBtn');
+      const playPauseIcon = document.getElementById('playPauseIcon');
+      const volumeControl = document.getElementById('volumeControl');
+      
+      let isPlaying = true;
+      
+      playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+          audio.pause();
+          playPauseIcon.classList.remove('fa-pause');
+          playPauseIcon.classList.add('fa-play');
+        } else {
+          audio.play();
+          playPauseIcon.classList.remove('fa-play');
+          playPauseIcon.classList.add('fa-pause');
+        }
+        isPlaying = !isPlaying;
+      });
+      
+      // Gestione del volume
+      volumeControl.addEventListener('input', () => {
+        audio.volume = volumeControl.value;
+      });
+      
+      // Aggiorna la posizione del volume slider quando il volume cambia esternamente
+      audio.addEventListener('volumechange', () => {
+        volumeControl.value = audio.volume;
+      });
+
+      // Particelle e animazioni al scroll
       if (window.innerWidth > 768) {
         particlesJS('particles-js', {
           particles: {
